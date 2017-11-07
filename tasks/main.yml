@@ -1,0 +1,56 @@
+---
+- name: REALMD | Include OS-specific variables.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version }}_{{ ansible_distribution_minor_version }}.yml"
+    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}_{{ ansible_distribution_minor_version }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+  tags:
+    - realmd
+
+- name: REALMD | Check realm join
+  stat: "{{ realmd_keytab }}"
+  register: realmd_keytab_file
+
+- name: REALMD | Set service facts
+  set_fact:
+    realmd_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    realmd_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+
+- name: REALMD | Set join facts
+  set_fact:
+    realmd_realm_joined: "{{ true if realmd_keytab_file.stat.exists else false }}"
+
+- name: REALMD | Assert that OS is supported
+  assert:
+    that: realmd_os_supported == true
+  tags:
+    - realmd
+
+- name: REALMD | Install Packages
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ realmd_packages }}"
+  tags:
+    - realmd
+
+- name: REALMD | Configure service
+  template:
+    src: realmd_template.j2
+    dest: "{{ realmd_config_file }}"
+    owner: "{{ realmd_config_owner }}"
+    group: "{{ realmd_config_group }}"
+    mode: "{{ realmd_config_mode }}"
+  tags:
+    - realmd
+
+- name: REALMD | Register that this role has run
+  set_fact: realmd_has_run=true
+  when: realmd_has_run is not defined
+  tags:
+    - realmd
