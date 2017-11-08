@@ -11,3 +11,5 @@ realmd_packages:
 
 realmd: {}
 realmd_defaults: {}
+
+realmd_domain: 'example.com'
