@@ -42,7 +42,7 @@
 
 - name: REALMD | Configure service
   template:
-    src: realmd_template.j2
+    src: realmd_conf.j2
     dest: "{{ realmd_config_file }}"
     owner: "{{ realmd_config_owner }}"
     group: "{{ realmd_config_group }}"
