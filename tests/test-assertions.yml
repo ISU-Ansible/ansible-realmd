@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  remote_user: root
+  
+  vars:
+    realmd_domain: "wtf.com"
+    realmd:
+      default_shell: "/usr/bin/tcsh"
+      manage_system: "yes"
+    realmd_fully_qualified_names: "no"
+
+  roles:
+    - role_under_test
+
+  tasks:
+    - name: "[Test] Does Configuration File Exist?"
+      stat:
+        path: "{{realmd_config_file}}"
+      register: realmd_config
+
+    - name: "[Test] Test File Defaults"
+      shell: "cat {{realmd_config_file}}"
+      when: realmd_config.stat.exists == True
+      register: realmd_config_contents
+
+    - debug:
+        var: realmd_config_contents
+
+    - assert:
+        that:
+          - "realmd_config_contents.rc == 0"
+          - "realmd_config_contents.stdout.find('[wtf.com]')"
+          - "realmd_config_contents.stdout.find('fully-qualified-names.*no')"
+          - "realmd_config_contents.stdout.find('default-shell.*tcsh')"
+    
