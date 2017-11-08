@@ -21,8 +21,8 @@ galaxy_info:
     - realmd
     - active_directory
 
-dependencies: 
-  - ISU-Ansible.sssd
-  - ISU-Ansible.openldap
-  - ISU-Ansible.kerberos
-  - ISU-Ansible.chrony
+#dependencies: 
+#  - ISU-Ansible.sssd
+#  - ISU-Ansible.openldap
+#  - ISU-Ansible.kerberos
+#  - ISU-Ansible.chrony
