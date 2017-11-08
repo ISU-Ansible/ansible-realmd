@@ -1,5 +1,7 @@
 ---
 realmd_os_supported: false
+realmd_skip_defaults: false
+
 realmd_packages:
   - oddjob
   - oddjob-mkhomedir
