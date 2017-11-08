@@ -13,7 +13,8 @@
     - realmd
 
 - name: REALMD | Check realm join
-  stat: "{{ realmd_keytab }}"
+  stat: 
+    path: "{{ realmd_keytab }}"
   register: realmd_keytab_file
 
 - name: REALMD | Set service facts
