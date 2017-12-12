@@ -14,19 +14,10 @@
   tags:
     - realmd
 
-- name: REALMD | Check realm join
-  stat: 
-    path: "{{ realmd_keytab }}"
-  register: realmd_keytab_file
-
 - name: REALMD | Set service facts
   set_fact:
     realmd_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
     realmd_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
-
-- name: REALMD | Set join facts
-  set_fact:
-    realmd_realm_joined: "{{ true if realmd_keytab_file.stat.exists else false }}"
 
 - name: REALMD | Assert that OS is supported
   assert:
