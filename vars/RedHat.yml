@@ -1,5 +1,6 @@
 ---
 realmd_packages:
+  - realmd
   - oddjob
   - oddjob-mkhomedir
   - sssd
